@@ -31,7 +31,9 @@ partial class BlockData
         get { return allBlockData; }
     }
 
-    public void DataInit() {
+    public void DataInit()
+    {
+        // 블록 종류에 해당되는 회전모양
         #region I
         // I형 블록 
         string[][] IA = new string[][]
@@ -64,6 +66,181 @@ partial class BlockData
             new string[] {"□","□","□","□" },
             new string[] {"□","□","□","□" },
             new string[] {"□","□","□","□" }
+        };
+        #endregion
+
+        #region J
+        // J형 블록 
+        string[][] JA = new string[][]
+        {
+            new string[] {"■","□","□","□" },
+            new string[] {"■","■","■","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] JB = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"■","□","□","□" },
+            new string[] {"■","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] JC = new string[][]
+        {
+            new string[] {"■","■","■","□" },
+            new string[] {"□","□","■","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] JD = new string[][]
+        {
+            new string[] {"□","■","□","□" },
+            new string[] {"□","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+        #endregion
+
+        #region L
+        // L형 블록 
+        string[][] LA = new string[][]
+        {
+            new string[] {"■","■","■","□"},
+            new string[] {"■","□","□","□"},
+            new string[] {"□","□","□","□"},
+            new string[] {"□","□","□","□"},
+        };
+
+        string[][] LB = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"□","■","□","□" },
+            new string[] {"□","■","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] LC = new string[][]
+        {
+            new string[] {"□","□","■","□" },
+            new string[] {"■","■","■","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] LD = new string[][]
+        {
+            new string[] {"■","□","□","□" },
+            new string[] {"■","□","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+        #endregion
+
+        #region O
+        // O형 블록 
+        string[][] OA = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] OB = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] OC = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] OD = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+        #endregion
+
+        #region S
+        // S형 블록 
+        string[][] SA = new string[][]
+        {
+            new string[] {"□","■","■","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] SB = new string[][]
+        {
+            new string[] {"■","□","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","■","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] SC = new string[][]
+        {
+            new string[] {"□","■","■","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] SD = new string[][]
+        {
+            new string[] {"■","□","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"□","■","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+        #endregion
+
+        #region Z
+        // Z형 블록 
+        string[][] ZA = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"□","■","■","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] ZB = new string[][]
+        {
+            new string[] {"□","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"■","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] ZC = new string[][]
+        {
+            new string[] {"■","■","□","□" },
+            new string[] {"□","■","■","□" },
+            new string[] {"□","□","□","□" },
+            new string[] {"□","□","□","□" },
+        };
+
+        string[][] ZD = new string[][]
+        {
+            new string[] {"□","■","□","□" },
+            new string[] {"■","■","□","□" },
+            new string[] {"■","□","□","□" },
+            new string[] {"□","□","□","□" },
         };
         #endregion
 
@@ -109,26 +286,57 @@ partial class BlockData
         {
             // 블록의 종류에 해당되는 공간이 만들어진다.
             allBlockData.Add(new List<string[][]>());
-            
+
             // 해당 블록 종류의 방향에 해당되는 공간이 만들어짐           
             string blockType = System.Enum.GetValues(typeof(BlockType)).GetValue(i).ToString();
-            switch (blockType) {
-                case "BT_T":                    
-                    allBlockData[i].Add(TA); // 0번째
-                    allBlockData[i].Add(TB); // 1번째 
-                    allBlockData[i].Add(TC); // 2번째
-                    allBlockData[i].Add(TD); // 3번째
+            switch (blockType)
+            {
+                case "BT_I":
+                    allBlockData[i].Add(IA); // 0번째
+                    allBlockData[i].Add(IB); // 1번째 
+                    allBlockData[i].Add(IC); // 2번째
+                    allBlockData[i].Add(ID); // 3번째
                     break;
                 case "BT_J":
-                    allBlockData[i].Add(IA);
-                    allBlockData[i].Add(IB);
-                    allBlockData[i].Add(IC);
-                    allBlockData[i].Add(ID);
+                    allBlockData[i].Add(JA); // 0번째
+                    allBlockData[i].Add(JB); // 1번째 
+                    allBlockData[i].Add(JC); // 2번째
+                    allBlockData[i].Add(JD); // 3번째
+                    break;
+                case "BT_L":
+                    allBlockData[i].Add(LA); // 0번째
+                    allBlockData[i].Add(LB); // 1번째 
+                    allBlockData[i].Add(LC); // 2번째
+                    allBlockData[i].Add(LD); // 3번째
+                    break;
+                case "BT_O":
+                    allBlockData[i].Add(OA); // 0번째
+                    allBlockData[i].Add(OB); // 1번째 
+                    allBlockData[i].Add(OC); // 2번째
+                    allBlockData[i].Add(OD); // 3번째
+                    break;
+                case "BT_S":
+                    allBlockData[i].Add(SA); // 0번째
+                    allBlockData[i].Add(SB); // 1번째 
+                    allBlockData[i].Add(SC); // 2번째
+                    allBlockData[i].Add(SD); // 3번째
+                    break;
+                case "BT_Z":
+                    allBlockData[i].Add(ZA); // 0번째
+                    allBlockData[i].Add(ZB); // 1번째 
+                    allBlockData[i].Add(ZC); // 2번째
+                    allBlockData[i].Add(ZD); // 3번째
+                    break;
+                case "BT_T":
+                    allBlockData[i].Add(TA);
+                    allBlockData[i].Add(TB);
+                    allBlockData[i].Add(TC);
+                    allBlockData[i].Add(TD);
                     break;
                 default:
                     break;
-            }                        
-        }        
+            }
+        }
 
     }
 }
