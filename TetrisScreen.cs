@@ -16,7 +16,7 @@ class TetrisScreen
     // 움직인 테트리스 블럭이 보여지는 공간
     List<List<int>> tetrisArray;
 
-    // 테트리스 블럭이 쌓이는 공간 
+    // 테트리스 블럭이 쌓이는 공간 (TODO)
     List<List<int>> tetrisStackArray;
 
     // 테트리스 보드를 새롭게 렌더링 할껀지 아닌지 체크
@@ -71,6 +71,9 @@ class TetrisScreen
         {
             tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
         }
+
+        // 테트리스 블록을 쌓는 맵으로 사용하기(TODO)
+        tetrisStackArray = tetrisArray;
     }
 
     // 테트리스 판을 화면에 그려주기 
