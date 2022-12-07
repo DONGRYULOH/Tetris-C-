@@ -50,8 +50,8 @@ enum BlockType
 
 partial class Block
 {
-    // 블럭이 어디에 생성될지 나타내는 좌표
-    int x = 0;
+    // 블럭이 어디서부터 시작될지 나타내는 좌표
+    int x = 1;
     int y = 0;
 
     // 블록이 벽을 만나서 움직이고 못하고 쌓임 여부 
@@ -67,9 +67,9 @@ partial class Block
     BlockData blockData;
 
     // 현재블록에 대한 정보(모양, 종류, 회전방향)
-    string[][] currentBlock = null;
+    string[][] currentBlockShape = null;
     BlockType currentBlockType;
-    BlockRotate currentBlockRotate = BlockRotate.RA;
+    BlockRotate currentBlockRotate;
 
     public Block(TetrisScreen tetrisScreen, BlockData blockData)
     {
@@ -88,44 +88,54 @@ partial class Block
         randomBlockTypeMake();
     }
 
+    // 보드에 블록을 그린다.
+    public void draw(ConsoleKey inputKey) {
+
+        // 블록 이동시 벽이 있는지 확인 
+        bool moveCheck = blockMoveWallCheck(inputKey);
+        if (moveCheck == false) return;
+
+        // 1. 블록을 그릴 보드정보가 필요 
+        // 보드에 어느 좌표에 블록을 그릴건지
+        // 블록이 처음 떨어지는 위치는? 
+
+        if (inputKey == ConsoleKey.DownArrow) y++;
+        else if (inputKey == ConsoleKey.LeftArrow) x--;
+        else if (inputKey == ConsoleKey.RightArrow) x++;
+
+
+        // 블록정보(종류, 회전방향)을 가져와서 블록의 모양을 찾는다. 
+        currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
+
+        for (int blockY = 0; blockY < blockData.widthMaxLength; blockY++) { 
+            for(int blockX=0; blockX < blockData.heightMaxLength; blockX++)
+            {
+                if (currentBlockShape[blockY][blockX] == "■") {
+                    tetrisScreen.TetristArray[y + blockY][x + blockX] = (int)TetrisBlock.MOVEBLOCK;
+                }                
+            }
+        }  
+    }
+
     // 랜덤 블록 생성
     public void randomBlockTypeMake() {
         Random randomBlock = new Random();
 
-        // 랜덤 블록 종류 
-        int randomBlockNumber = randomBlock.Next((int)BlockType.BT_I, (int)BlockType.BT_T); // 0부터 6까지         
-        currentBlockType = (BlockType)randomBlockNumber;
+        // 랜덤 블록 종류, 회전방향
+        int randomBlockNumberType = randomBlock.Next((int)BlockType.BT_I, (int)BlockType.BT_T); // 0부터 6까지         
+        currentBlockType = (BlockType)randomBlockNumberType;
+        int randomBlockNumberRotate = randomBlock.Next((int)BlockRotate.RA, (int)BlockRotate.RD); // 0부터 3까지         
+        currentBlockRotate = (BlockRotate)randomBlockNumberRotate;
 
         // 블록 초기화(위치값, 블럭고정여부)
-        x = 0;
+        x = 1;
         y = 0;
         blockWallMoveCheck = false;
     }
 
-    // 블록정보(종류, 회전방향)을 가져와서 블록의 모양을 찾고 화살표 방향키만큼 이동
-    public void keyInputMoveBlock() {
-
-        // 블록정보(종류, 회전방향)을 가져와서 블록의 모양을 찾는다. 
-        currentBlock = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
-        
-        int tetrisMapX_maxLength = tetrisScreen.TetristArray[tetrisScreen.TetristArray.Count - 1].Count;
-        int tetrisMapY_maxLength = tetrisScreen.TetristArray.Count;           
-
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                if (currentBlock[i][j] == "■")
-                {                    
-                   tetrisScreen.setBlock(i + y, j + x, TetrisBlock.MOVEBLOCK);                    
-                }
-            }
-        }
-    }
-
     // 키보드의 방향키를 눌렀을 때 블럭이 이동할 방향   
     public void keyInput(ConsoleKey inputKey)
-    {        
+    {
 
         switch (inputKey)
         {
@@ -135,22 +145,16 @@ partial class Block
                 // 2. 그 블록을 어느 방향으로 회전시킬건지                 
                 currentBlockRotate++;
                 if ((int)currentBlockRotate == 4) currentBlockRotate = 0;
-                keyInputMoveBlock();
+                draw(inputKey);
                 break;
-            case ConsoleKey.DownArrow:
-                y++; // 블록의 좌표가 y축(아래로)으로 1만큼 이동
-                // 현재 움직이고 있는 블록으로 아래로 1만큼 이동 후 테트리스 화면에 그려준다. 
-                keyInputMoveBlock();
+            case ConsoleKey.DownArrow: // 아래로 1 이동                
+                draw(inputKey);
                 break;
-            case ConsoleKey.LeftArrow:
-                x--;
-                // 현재 움직이고 있는 블록으로 왼쪽으로 -1만큼 이동 후 테트리스 화면에 그려준다. 
-                keyInputMoveBlock();
+            case ConsoleKey.LeftArrow: // 왼쪽으로 1이동                
+                draw(inputKey);
                 break;
-            case ConsoleKey.RightArrow:
-                x++;
-                // 현재 움직이고 있는 블록으로 오른쪽으로 1만큼 이동 후 테트리스 화면에 그려준다. 
-                keyInputMoveBlock();
+            case ConsoleKey.RightArrow: // 오른쪽으로 1이동                                 
+                draw(inputKey);
                 break;
             default:
                 break;
@@ -158,136 +162,102 @@ partial class Block
     }
 
     // 블럭 이동시 벽인지 확인한다.
-    public void blockMoveWallCheck(ConsoleKey inputKey) {
-        int tempY = y;
-        int tempX = x;
-        switch (inputKey)
-        {            
-            case ConsoleKey.DownArrow:
-                // Y축(아래로)으로 한칸 이동했을 때 벽이 있는지 확인                
-                currentBlock = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate]; // 현재 움직이고 있는 블록을 가져옴
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        if (currentBlock[i][j] == "■") {
-                            // 벽이 있는 경우라면 현재 블록의 이동을 멈추고 테트리스 공간에 쌓고 랜덤블록을 생성한다.                            
-
-                            // 왜 이렇게 가져올수 없는지? 
-                            // Console.WriteLine(tetrisScreen.TetristArray[tetrisScreen.TetristArray.Count - 1][tetrisScreen.TetristArray.Count - 1]);
-
-                            if (tempY + 1 == tetrisScreen.TetristArray.Count-1) {
-                                for (int x = 0; x < 4; x++) {
-                                    for (int y = 0; y < 4; y++) {
-                                        tetrisStackArray.setBlock(x + tempY, y + tempX, TetrisBlock.MOVEBLOCK);
-                                        blockWallMoveCheck = true;
-                                        return;
-                                    }
-                                }                                
-                            }
-                        }
-
-                    }
-                }                
-                break;
-            case ConsoleKey.LeftArrow:
-                tempX--;
-              
-                break;
-            case ConsoleKey.RightArrow:
-                tempX++;
-                
-                break;
-            default:
-                break;
-        }
-    }
-
-    // 현재 움직이고 있는 블록이 테트리스 맵을 벗어나는지 확인
-    public void blockGetOutMap(ConsoleKey inputKey)
-    {        
-        // 블록정보(종류, 회전방향)을 가져와서 블록의 모양을 찾는다. 
-        currentBlock = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
-        int tetrisMapX_maxLength = tetrisScreen.TetristArray[tetrisScreen.TetristArray.Count - 1].Count;
-        int tetrisMapY_maxLength = tetrisScreen.TetristArray.Count;
-        int tempX = this.x;
+    public bool blockMoveWallCheck(ConsoleKey inputKey) {
         int tempY = this.y;
-
+        int tempX = this.x;
         switch (inputKey)
         {
-            case ConsoleKey.UpArrow:                
-                // 블록의 모양의 좌표에서 테트리스 보드에서 움직이고 있는 블록의 좌표를 더한다.
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (currentBlock[i][j] == "■")
-                        {
-                            if (j + tempX >= tetrisMapX_maxLength || i + tempY >= tetrisMapY_maxLength)
-                            {
-                                TetrisScreen.removeCheck = 1;
-                                return;
-                            }
-                        }
-                    }
-                }
+            case ConsoleKey.UpArrow: // 블록회전
                 break;
-            case ConsoleKey.DownArrow:
+            case ConsoleKey.DownArrow: // 아래로 1 이동
                 tempY++;
-                // 블록의 모양의 좌표에서 테트리스 보드에서 움직이고 있는 블록의 좌표를 더한다.
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (currentBlock[i][j] == "■")
-                        {
-                            if (j + tempX >= tetrisMapX_maxLength || i + tempY >= tetrisMapY_maxLength)
-                            {
-                                TetrisScreen.removeCheck = 1;
-                                return;
-                            }
-                        }
-                    }
-                }
                 break;
-            case ConsoleKey.LeftArrow:
+            case ConsoleKey.LeftArrow: // 왼쪽으로 1이동
                 tempX--;
-                // 블록의 모양의 좌표에서 테트리스 보드에서 움직이고 있는 블록의 좌표를 더한다.
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (currentBlock[i][j] == "■")
-                        {
-                            if (j + tempX <= -1 || i + tempY <= -1)
-                            {
-                                TetrisScreen.removeCheck = 1;
-                                return;
-                            }
-                        }
-                    }
-                }
                 break;
-            case ConsoleKey.RightArrow:
+            case ConsoleKey.RightArrow: // 오른쪽으로 1이동 
                 tempX++;
-                // 블록의 모양의 좌표에서 테트리스 보드에서 움직이고 있는 블록의 좌표를 더한다.
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < 4; j++)
-                    {
-                        if (currentBlock[i][j] == "■")
-                        {
-                            if (j + tempX >= tetrisMapX_maxLength || i + tempY >= tetrisMapY_maxLength)
-                            {
-                                TetrisScreen.removeCheck = 1;
-                                return;
-                            }
-                        }
-                    }
-                }
                 break;
             default:
                 break;
         }
-    }
+
+        // 테트리스 보드의 왼쪽 벽 
+        int leftWall = tetrisScreen.TetristArray[tetrisScreen.TetristArray.Count - 1].Count - tetrisScreen.TetristArray[tetrisScreen.TetristArray.Count - 1].Count;
+
+        // 테트리스 보드의 오른쪽 벽 
+        int rightWall = tetrisScreen.TetristArray[tetrisScreen.TetristArray.Count - 1].Count - 1;
+        
+        // 테트리스 보드의 맨아래쪽 벽 
+        int bottomtWall = tetrisScreen.TetristArray.Count - 1;
+
+        currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate]; // 현재 움직이고 있는 블록을 가져옴
+        for (int blockY = 0; blockY < blockData.widthMaxLength; blockY++) {
+            for (int blockX = 0; blockX < blockData.heightMaxLength; blockX++) {
+                if (currentBlockShape[blockY][blockX] == "■") {
+
+                    // 아래, 왼쪽, 오른쪽으로 이동했을 때 벽이 있는 경우 이동 불가능
+                    if (inputKey == ConsoleKey.DownArrow)
+                    {
+                        if (tempY + blockY == bottomtWall)
+                        {
+                            for (int a = 0; a < blockData.widthMaxLength; a++)
+                            {
+                                for (int b = 0; b < blockData.heightMaxLength; b++)
+                                {
+                                    if (currentBlockShape[a][b] == "■")
+                                    {
+                                        tetrisScreen.TetristArray[y + a][x + b] = (int)TetrisBlock.MOVEBLOCK;
+                                    }
+                                }
+                            }
+
+                            return false; // 이동불가능
+                        }
+                    }
+                    else if (inputKey == ConsoleKey.LeftArrow) {
+                        if (tempX - blockX == leftWall)
+                        {
+                            // 벽이 있는 경우 블록 이동이 불가능 하므로 이동하기전의 위치에 블록을 그려준다.
+                            for (int a = 0; a < blockData.widthMaxLength; a++)
+                            {
+                                for (int b = 0; b < blockData.heightMaxLength; b++)
+                                {
+                                    if (currentBlockShape[a][b] == "■")
+                                    {
+                                        tetrisScreen.TetristArray[y + a][x + b] = (int)TetrisBlock.MOVEBLOCK;
+                                    }
+                                }
+                            }
+
+                            return false; // 이동불가능
+                        }
+                    }
+                    else if (inputKey == ConsoleKey.RightArrow)
+                    {
+                        if (tempX + blockX == rightWall)
+                        {
+                            for (int a = 0; a < blockData.widthMaxLength; a++)
+                            {
+                                for (int b = 0; b < blockData.heightMaxLength; b++)
+                                {
+                                    if (currentBlockShape[a][b] == "■")
+                                    {
+                                        tetrisScreen.TetristArray[y + a][x + b] = (int)TetrisBlock.MOVEBLOCK;
+                                    }
+                                }
+                            }
+
+                            return false; // 이동불가능
+                        }
+                    }
+                    
+                }
+            }
+        }
+
+        return true;
+    }    
 
     // 블럭이 이동한다.    
     public void moveBlock()
@@ -297,31 +267,33 @@ partial class Block
         {
             ConsoleKey inputKey = Console.ReadKey().Key;
 
-            // 블럭 이동시 벽인지 확인한다. 벽이라면 그 자리에 고정시켜야 된다. 
-            blockMoveWallCheck(inputKey);
-            if (blockWallMoveCheck == true) {
-                randomBlockTypeMake();
-                return;
-            }
+            // 1. 블럭 이동시 벽이 있는지 확인한다.
+            // blockMoveWallCheck(inputKey);
+            
+
+            // 2. 블럭 이동이 가능한 경우 테트리스 맵을 초기화 후 방향키에 해당되는 곳으로 블럭 이동                                                                                 
+            tetrisScreen.blockMoveRender(); // 테트리스 맵을 초기화  
+            keyInput(inputKey); // 방향키에 해당되는 곳으로 블럭 이동
+
 
             // 현재 움직이고 있는 블록이 테트리스 맵을 벗어나는지 확인
-            blockGetOutMap(inputKey);
+            //            blockGetOutMap(inputKey);
 
             // 블록이 테트리스 보드를 넘어가는 경우 지우면 안됨
-            if (TetrisScreen.removeCheck == 0)
-            {
-                tetrisScreen.blockMoveRender(); // 테트리스 맵을 초기화                 
-            }
+            /*          if (TetrisScreen.removeCheck == 0)
+                      {
+                          tetrisScreen.blockMoveRender(); // 테트리스 맵을 초기화                 
+                      }*/
 
             // 테트리스 맵을 넘어가는 경우 블록이동 X            
-            if (TetrisScreen.removeCheck == 1) {
+            /*if (TetrisScreen.removeCheck == 1) {
                 // 테트리스 맵을 넘어가는 여부체크를 0으로 만든다 Why? 블럭이 벽에 부딪히는 경우에 
                 // 부딪히는 벽의 방향 반대쪽으로 이동하는 경우는 움직이는게 가능해야되므로 
                 TetrisScreen.removeCheck = 0;
             } else {
                 keyInput(inputKey);
-            }
-            
+            }*/
+
         }
     }
 

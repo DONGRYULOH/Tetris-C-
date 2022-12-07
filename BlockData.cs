@@ -26,6 +26,10 @@ partial class BlockData
     List<List<string[][]>> allBlockData = new List<List<string[][]>>();
     // string[ , , , ] allBlockData2 = new string[7,4,4,4];
 
+    // 모든 블록의 모양이 들어갈 공간의 최대 가로길이와 최대 세로길이 
+    public int widthMaxLength = 4;
+    public int heightMaxLength = 4;
+
     public List<List<string[][]>> AllBlockData
     {
         get { return allBlockData; }

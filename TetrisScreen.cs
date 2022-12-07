@@ -38,17 +38,23 @@ class TetrisScreen
     {
         for (int y = 0; y < tetrisArray.Count; y++)
         {
-            for (int x = 0; x < tetrisArray[x].Count; x++)
+            for (int x = 0; x < tetrisArray[y].Count; x++)
             {
                 tetrisArray[y][x] = (int)TetrisBlock.NONBLOCK;
             }
         }
 
-        // <벽의 역할을 담당할 블록>
-        // 마지막 테트리스 공간을 쌓여있는 블록으로 설정
+        // <벽의 역할을 담당할 블록>        
+        // 1. 마지막 테트리스 공간을 벽으로 설정 
         for (int i = 0; i < tetrisArray[tetrisArray.Count - 1].Count; i++)
-        {
-            tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
+        {         
+            tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;            
+        }
+        // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
+        for (int i = 0; i < tetrisArray.Count; i++)
+        {            
+            tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
+            tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
         }
     }
 
@@ -65,11 +71,17 @@ class TetrisScreen
             }
         }
 
-        // <벽의 역할을 담당할 블록>
-        // 마지막 테트리스 공간을 쌓여있는 블록으로 설정        
+        // <벽의 역할을 담당할 블록>        
+        // 1. 마지막 테트리스 공간을 벽으로 설정 
         for (int i = 0; i < tetrisArray[tetrisArray.Count - 1].Count; i++)
         {
             tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
+        }
+        // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
+        for (int i = 0; i < tetrisArray.Count; i++)
+        {
+            tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
+            tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
         }
 
         // 테트리스 블록을 쌓는 맵으로 사용하기(TODO)

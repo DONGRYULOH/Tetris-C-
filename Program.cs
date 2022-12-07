@@ -34,7 +34,7 @@ namespace Tetris
 
             while (true)
             {
-                Thread.Sleep(500);
+                Thread.Sleep(500); 
                 block.moveBlock();
                 Console.Clear();
                 tetrisScreen.TetrisRender();                
