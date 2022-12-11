@@ -1,4 +1,4 @@
-# C# 테트리스 만들기
+# C# 테트리스 TODO-LIST
 
 1. 사용자에게 보여질 테트리스 맵(껍데기 보드)
     - [x] 블록이 이동하거나 회전했을 때 새롭게 맵을 그려주는 보드
@@ -34,14 +34,14 @@
         - [x] 쌓인 블록 정보를 저장하고 있는 보드 생성(알맹이 보드)
         - [ ] 블록이 아래로 더 이상 내려갈수 없는 경우 알맹이 보드에 블록정보를 저장
 
-
        
-
-
 5. 랜덤으로 생성될 블록
 
 ![화면 캡처 2022-12-04 223837](https://user-images.githubusercontent.com/53106848/205493736-b49188fc-19e6-4def-bbfe-08963e8d0dd4.png)
 <img width="50%" src="https://user-images.githubusercontent.com/53106848/205493726-d675153b-ee52-45a3-8267-928f43e737eb.jpg" />
+
+# 테트리스 설계
+https://gitmind.com/app/docs/fc9uuvve
 
 
 
