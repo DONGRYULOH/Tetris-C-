@@ -23,263 +23,224 @@ partial class BlockData
      */
 
     // 모든 블록을 관리하는 것을 배열 또는 리스트로 만든다.
-    List<List<string[][]>> allBlockData = new List<List<string[][]>>();
+    List<List<int[,]>> allBlockData = new List<List<int[,]>>();
     // string[ , , , ] allBlockData2 = new string[7,4,4,4];
 
     // 모든 블록의 모양이 들어갈 공간의 최대 가로길이와 최대 세로길이 
     public int widthMaxLength = 4;
     public int heightMaxLength = 4;
 
-    public List<List<string[][]>> AllBlockData
+    public List<List<int[,]>> AllBlockData
     {
         get { return allBlockData; }
     }
 
     public void DataInit()
     {
-        // 블록 종류에 해당되는 회전모양
+        // <7개의 블록 종류에 해당되는 모든 회전모양을 2차원 배열로 만들어둔다.>
+        // 반시계 방향으로 90도 회전한 모든 방향
+        // 테트리스 블록은 총 7개로 고정되어 있기 때문에 동적으로 그려줄 필요는 없다.
+
         #region I
         // I형 블록 
-        string[][] IA = new string[][]
-        {
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
+        int[,] IA = new int[4,4]{            
+            {1,0,0,0},                        
+            {1,0,0,0},
+            {1,0,0,0},
+            {1,0,0,0}
         };
 
-        string[][] IB = new string[][]
-        {
-            new string[] {"■","■","■","■" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" }
+        int[,] IB = new int[4, 4]{
+            {0,0,0,0},
+            {1,1,1,1},            
+            {0,0,0,0},
+            {0,0,0,0}
         };
 
-        string[][] IC = new string[][]
-        {
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
+        int[,] IC = new int[4, 4]{
+            {1,0,0,0},
+            {1,0,0,0},
+            {1,0,0,0},
+            {1,0,0,0}
         };
 
-        string[][] ID = new string[][]
-        {
-            new string[] {"■","■","■","■" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" }
+        int[,] ID = new int[4, 4]{
+            {0,0,0,0},
+            {1,1,1,1},
+            {0,0,0,0},
+            {0,0,0,0}
         };
         #endregion
 
+
         #region J
         // J형 블록 
-        string[][] JA = new string[][]
-        {
-            new string[] {"■","□","□","□" },
-            new string[] {"■","■","■","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] JA = new int[4, 4]{
+            {0,1,0,0},
+            {0,1,0,0},
+            {1,1,0,0},
+            {0,0,0,0}
         };
 
-        string[][] JB = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] JB = new int[4, 4]{
+            {1,1,1,0},
+            {0,0,1,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
 
-        string[][] JC = new string[][]
-        {
-            new string[] {"■","■","■","□" },
-            new string[] {"□","□","■","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] JC = new int[4, 4]{
+            {1,1,0,0},
+            {1,0,0,0},
+            {1,0,0,0},
+            {0,0,0,0}
         };
 
-        string[][] JD = new string[][]
-        {
-            new string[] {"□","■","□","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] JD = new int[4, 4]{
+            {1,0,0,0},
+            {1,1,1,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
         #endregion
 
         #region L
         // L형 블록 
-        string[][] LA = new string[][]
-        {
-            new string[] {"■","■","■","□"},
-            new string[] {"■","□","□","□"},
-            new string[] {"□","□","□","□"},
-            new string[] {"□","□","□","□"},
+        int[,] LA = new int[4, 4]{
+            {1,0,0,0},
+            {1,0,0,0},
+            {1,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] LB = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] LB = new int[4, 4]{
+            {0,0,1,0},
+            {1,1,1,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] LC = new string[][]
-        {
-            new string[] {"□","□","■","□" },
-            new string[] {"■","■","■","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] LC = new int[4, 4]{
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] LD = new string[][]
-        {
-            new string[] {"■","□","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] LD = new int[4, 4]{
+            {1,1,1,0},
+            {1,0,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
         #endregion
 
         #region O
         // O형 블록 
-        string[][] OA = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] OA = new int[4, 4]{
+            {1,1,0,0},
+            {1,1,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] OB = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] OB = new int[4, 4]{
+            {1,1,0,0},
+            {1,1,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] OC = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] OC = new int[4, 4]{
+            {1,1,0,0},
+            {1,1,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] OD = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] OD = new int[4, 4]{
+            {1,1,0,0},
+            {1,1,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
         #endregion
 
         #region S
         // S형 블록 
-        string[][] SA = new string[][]
-        {
-            new string[] {"□","■","■","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] SA = new int[4, 4]{
+            {0,1,1,0},
+            {1,1,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] SB = new string[][]
-        {
-            new string[] {"■","□","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] SB = new int[4, 4]{
+            {1,0,0,0},
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] SC = new string[][]
-        {
-            new string[] {"□","■","■","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] SC = new int[4, 4]{
+            {0,1,1,0},
+            {1,1,0,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] SD = new string[][]
-        {
-            new string[] {"■","□","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] SD = new int[4, 4]{
+            {1,0,0,0},
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
         #endregion
 
         #region Z
         // Z형 블록 
-        string[][] ZA = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"□","■","■","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] ZA = new int[4, 4]{
+            {1,1,0,0},
+            {0,1,1,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] ZB = new string[][]
-        {
-            new string[] {"□","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] ZB = new int[4, 4]{
+            {1,0,0,0},
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] ZC = new string[][]
-        {
-            new string[] {"■","■","□","□" },
-            new string[] {"□","■","■","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] ZC = new int[4, 4]{
+            {1,0,0,0},
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] ZD = new string[][]
-        {
-            new string[] {"□","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"■","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] ZD = new int[4, 4]{
+            {1,0,0,0},
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
         #endregion
 
         #region T
         // T형 블록 
-        string[][] TA = new string[][]
-        {
-            new string[] {"□","■","□","□" },
-            new string[] {"■","■","■","□" },
-            new string[] {"□","□","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] TA = new int[4, 4]{
+            {0,1,0,0},
+            {1,1,1,0},
+            {0,0,0,0},
+            {0,0,0,0}
         };
-
-        string[][] TB = new string[][]
-        {
-            new string[] {"□","■","□","□" },
-            new string[] {"□","■","■","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] TB = new int[4, 4]{
+            {0,1,0,0},
+            {1,1,0,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] TC = new string[][]
-        {
-            new string[] {"□","□","□","□" },
-            new string[] {"■","■","■","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] TC = new int[4, 4]{
+            {0,0,0,0},
+            {1,1,1,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
-
-        string[][] TD = new string[][]
-        {
-            new string[] {"□","■","□","□" },
-            new string[] {"■","■","□","□" },
-            new string[] {"□","■","□","□" },
-            new string[] {"□","□","□","□" },
+        int[,] TD = new int[4, 4]{
+            {0,1,0,0},
+            {0,1,1,0},
+            {0,1,0,0},
+            {0,0,0,0}
         };
         #endregion
 
@@ -289,7 +250,7 @@ partial class BlockData
         for (int i = 0; i < allBlockTypeCnt; i++)
         {
             // 블록의 종류에 해당되는 공간이 만들어진다.
-            allBlockData.Add(new List<string[][]>());
+            allBlockData.Add(new List<int[,]>());
 
             // 해당 블록 종류의 방향에 해당되는 공간이 만들어짐           
             string blockType = System.Enum.GetValues(typeof(BlockType)).GetValue(i).ToString();

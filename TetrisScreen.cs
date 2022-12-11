@@ -16,25 +16,31 @@ class TetrisScreen
     // 움직인 테트리스 블럭이 보여지는 공간
     List<List<int>> tetrisArray;
 
-    // 테트리스 블럭이 쌓이는 공간 (TODO)
-    List<List<int>> tetrisStackArray;
-
-    // 테트리스 보드를 새롭게 렌더링 할껀지 아닌지 체크
-    public static int removeCheck = 0;
+    // 블록에 대한 정보
+    Block block;
 
     public List<List<int>> TetristArray
     {
         get { return tetrisArray; }
-    }
+    }    
 
-    // 테트리스 판의 해당 위치에 블럭 세팅
-    public void setBlock(int y, int x, TetrisBlock blockType)
+    // 테트리스 보드의 X, Y축 
+    public int tetrisBoardGetX
+    { 
+        get { return tetrisArray[0].Count; }    
+    }
+    public int tetrisBoardGetY
     {
-        tetrisArray[y][x] = (int)blockType;
+        get { return tetrisArray.Count; }
     }
 
-    // 블럭이 이동하고 나서 테트리스 판을 다시 그려준다 
-    public void blockMoveRender()
+    // 블록에 대한 정보를 가져온다.
+    public void getBlockInfo(Block block) { 
+        this.block = block;
+    }
+
+    // 블럭이 이동하기 전에 테트리스 판을 초기화 시킨다.
+    public void tetrisBoardInit()
     {
         for (int y = 0; y < tetrisArray.Count; y++)
         {
@@ -61,6 +67,7 @@ class TetrisScreen
     // x * y 공간의 테트리스 판 만들기 
     public TetrisScreen(int x, int y)
     {
+        
         tetrisArray = new List<List<int>>();
         for (int i = 0; i < y; i++)
         {
@@ -82,14 +89,11 @@ class TetrisScreen
         {
             tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
             tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
-        }
-
-        // 테트리스 블록을 쌓는 맵으로 사용하기(TODO)
-        tetrisStackArray = tetrisArray;
+        }        
     }
 
     // 테트리스 판을 화면에 그려주기 
-    public void TetrisRender()
+    public virtual void TetrisRender()
     {
         for (int y = 0; y < tetrisArray.Count; y++)
         {

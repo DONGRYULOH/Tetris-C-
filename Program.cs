@@ -23,14 +23,16 @@ namespace Tetris
     internal class Program
     {
         static void Main(string[] args)
-        {            
-            // 1.테트리스 판 생성
-            TetrisScreen tetrisScreen = new TetrisScreen(10, 15);
+        {
+            // 1.테트리스 판 생성					            
+            TetrisScreen tetrisScreen = new TetrisScreen(10, 15); // 보여주기용 테트리스 
+            TetrisDataSaveScreen saveTetrisScreen = new TetrisDataSaveScreen(tetrisScreen); // 블럭 저장용 테트리스
             tetrisScreen.TetrisRender();
 
             // 2.테트리스 블록 생성
             BlockData blockDataInfo = new BlockData();
-            Block block = new Block(tetrisScreen, blockDataInfo);
+            Block block = new Block(tetrisScreen, blockDataInfo, saveTetrisScreen);
+            tetrisScreen.getBlockInfo(block);
 
             while (true)
             {
