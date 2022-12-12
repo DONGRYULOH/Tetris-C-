@@ -66,7 +66,10 @@ partial class Block
     BlockRotate currentBlockRotate;
 
     // 저장된 블록을 담고 있는 테트리스 보드에 대한 정보
-    TetrisDataSaveScreen tetrisDataSaveScreen; 
+    TetrisDataSaveScreen tetrisDataSaveScreen;
+
+    // 랜덤 블록 생성 
+    Random randomBlock = new Random();
 
     public Block(TetrisScreen tetrisScreen, BlockData blockData, TetrisDataSaveScreen tetrisDataSaveScreen)
     {
@@ -91,11 +94,8 @@ partial class Block
         // 블록 이동시 벽이 있는지 확인 
         bool moveCheck = blockMoveWallCheck(inputKey);
         if (moveCheck == false) return;
-
-        // 1. 블록을 그릴 보드정보가 필요 
-        // 보드에 어느 좌표에 블록을 그릴건지
-        // 블록이 처음 떨어지는 위치는? 
-
+        
+        // 방향키에 해당되는 방향으로 좌표값을 이동
         if (inputKey == ConsoleKey.DownArrow) y++;
         else if (inputKey == ConsoleKey.LeftArrow) x--;
         else if (inputKey == ConsoleKey.RightArrow) x++;
@@ -109,9 +109,10 @@ partial class Block
         currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
 
         for (int blockY = 0; blockY < blockData.widthMaxLength; blockY++) { 
-            for(int blockX=0; blockX < blockData.heightMaxLength; blockX++)
+            for(int blockX = 0; blockX < blockData.heightMaxLength; blockX++)
             {
-                if (currentBlockShape[blockY,blockX] == 1) {
+                // 블럭이 존재(1)하는 좌표값만 껍데기 테트리스의 위치에 넣어준다.
+                if (currentBlockShape[blockY, blockX] == 1) {
                     tetrisScreen.TetristArray[y + blockY][x + blockX] = (int)TetrisBlock.MOVEBLOCK;
                 }                
             }
@@ -120,8 +121,7 @@ partial class Block
 
     // 랜덤 블록 생성
     public void randomBlockTypeMake() {
-        Random randomBlock = new Random();
-
+        
         // 랜덤 블록 종류, 회전방향
         int randomBlockNumberType = randomBlock.Next((int)BlockType.BT_I, (int)BlockType.BT_T); // 0부터 6까지         
         currentBlockType = (BlockType)randomBlockNumberType;
@@ -130,7 +130,21 @@ partial class Block
 
         // 블록 초기화(위치값, 블럭고정여부)
         this.x = 1;
-        this.y = 0;            
+        this.y = 0;
+
+        // 블록의 모양을 가져와서 껍데기 보드에 넣어준다.
+        currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
+
+        for (int blockY = 0; blockY < blockData.widthMaxLength; blockY++)
+        {
+            for (int blockX = 0; blockX < blockData.heightMaxLength; blockX++)
+            {
+                if (currentBlockShape[blockY, blockX] == 1)
+                {
+                    tetrisScreen.TetristArray[y + blockY][x + blockX] = (int)TetrisBlock.MOVEBLOCK;
+                }
+            }
+        }
     }
 
 
@@ -150,6 +164,9 @@ partial class Block
             case ConsoleKey.DownArrow: // 아래로 1 이동
                 // 아래로 이동시 벽이 있는지 체크(TODO)
                 draw(inputKey);
+                // 알맹이 보드에 쌓인 블록의 데이터가 어디선가 초기화 되고 있음
+                // 블록이 쌓이지도 않았는데 껍데기 보드에 있는블록이 알맹이 보드에 들어가 있지??
+                Console.WriteLine(TetrisDataSaveScreen.tetrisStackArray);
                 break;
             case ConsoleKey.LeftArrow: // 왼쪽으로 1이동                
                 draw(inputKey);
@@ -192,7 +209,8 @@ partial class Block
                     {
                         // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장
                         tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape);
-                        tetrisDataSaveScreen.TetrisRender();
+                        // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
+                        randomBlockTypeMake();                        
                         return false; // 이동 불가능
                     }
                 }
@@ -244,7 +262,8 @@ partial class Block
                 break;
             case ConsoleKey.DownArrow: // 아래로 1 이동
                 // 벽이 있는지 확인
-                downWallCheck(tempX, tempY, bottomtWall);                      
+                bool result = downWallCheck(tempX, tempY, bottomtWall);
+                if (result == false) return false;
                 break;
             case ConsoleKey.LeftArrow: // 왼쪽으로 1이동
                 // 1. 이동하기 전에 현재 블록이 위치하고 있는 좌표값을 가져온다.
@@ -303,10 +322,10 @@ partial class Block
             keyInput(inputKey); // 방향키에 해당되는 곳으로 블럭 이동
 
         }
-     /*   else { // 방향키를 누르지 않았을 때 아래로 한칸 이동
+        else { // 방향키를 누르지 않았을 때 아래로 한칸 이동
             tetrisScreen.tetrisBoardInit(); // 테트리스 맵을 초기화  
             draw(ConsoleKey.DownArrow);
-        }*/
+        }
     }
 
 }

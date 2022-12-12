@@ -14,7 +14,7 @@ internal class TetrisDataSaveScreen : TetrisScreen
     TetrisScreen tetrisScreen;
 
     // 블록이 쌓일 때 마다 블록 정보를 저장하는 보드(자식)
-    List<List<int>> tetrisStackArray;    
+    static public List<List<int>> tetrisStackArray;    
 
     public TetrisDataSaveScreen(TetrisScreen tetrisScreen) : base(tetrisScreen.tetrisBoardGetX, tetrisScreen.tetrisBoardGetY) {
         /*
@@ -27,20 +27,36 @@ internal class TetrisDataSaveScreen : TetrisScreen
         // why? 자식 테트리스 보드(블록이 쌓일 때 마다 블록 정보를 저장하는 보드)를 만들기 위해서는 부모의 테트리스 보드 X축, Y축 길이를 가져와야 한다.
 
         this.tetrisScreen = tetrisScreen;
-        this.tetrisStackArray = tetrisScreen.TetristArray;        
+
+        // 껍데기 보드 객체가 있는 주소를 똑같이 알맹이 보드에게 전달하니까 껍데기 보드의 데이터가 사라지면 똑같이 알맹이 보드의 데이터도 사라짐
+        // tetrisStackArray = tetrisScreen.TetristArray;  
+
+        saveBlockMake();
     }
-
-    // 자식 보드에 쌓인 블록을 부모 보드에 쌓는다.
-    public override void TetrisRender() {
-        // 1. 블록에 대한 정보 필요 why? 어떤 블록을 쌓을지 알아야 되므로 
-
-        // 2. 쌓인 블록을 가져와서 부모 테트리스 보드에 그려줌 
-        for (int y = 0; y < tetrisStackArray.Count; y++)
+    
+    // 블록을 쌓을 테트리스 공간을 만든다.
+    public void saveBlockMake() {
+        tetrisStackArray = new List<List<int>>();
+        for (int i = 0; i < tetrisBoardGetY; i++)
         {
-            for (int x = 0; x < tetrisStackArray[y].Count; x++)
+            tetrisStackArray.Add(new List<int>());
+            for (int j = 0; j < tetrisBoardGetX; j++)
             {
-                this.tetrisScreen.TetristArray[y][x] = tetrisStackArray[y][x];
-            }            
+                tetrisStackArray[i].Add((int)TetrisBlock.NONBLOCK);
+            }
+        }
+
+        // <벽의 역할을 담당할 블록>        
+        // 1. 마지막 테트리스 공간을 벽으로 설정 
+        for (int i = 0; i < tetrisStackArray[tetrisStackArray.Count - 1].Count; i++)
+        {
+            tetrisStackArray[tetrisStackArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
+        }
+        // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
+        for (int i = 0; i < tetrisStackArray.Count; i++)
+        {
+            tetrisStackArray[i][0] = (int)TetrisBlock.WALLBLOCK;
+            tetrisStackArray[i][tetrisStackArray[tetrisStackArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
         }
     }
 
