@@ -33,7 +33,59 @@
     - [ ] 밑바닥 벽인 경우 블록을 쌓고 새로운 블록을 생성
         - [x] 쌓인 블록 정보를 저장하고 있는 보드 생성(알맹이 보드)
         - [ ] 블록이 아래로 더 이상 내려갈수 없는 경우 알맹이 보드에 블록정보를 저장
-        -> 6시간 동안 해결하지 못함 어떻게 문제해결 했는지 적기
+            - [ ] 블록이 쌓이고 새로운 블록을 이동시키면 기존에 쌓였던 블록이 사라지는 현상이 발생함
+            ![image](https://user-images.githubusercontent.com/53106848/207199400-c1281303-fef9-42ab-b3de-d7597df17127.png)            
+            ```C#
+            class 알맹이 보드(자식) : 껍데기 보드(부모){
+            
+                // 블록이 쌓일 때 마다 블록정보를 저장하는 알맹이 보드(자식)
+                static public List<List<int>> tetrisStackArray;                                                
+                
+                public TetrisDataSaveScreen(TetrisScreen tetrisScreen) : base(tetrisScreen.tetrisBoardGetX, tetrisScreen.tetrisBoardGetY) {
+                    this.tetrisStackArray = tetrisScreen.tetristArray; 
+                }
+            }
+            
+            class TetrisScreen(껍데기 보드){
+                // 껍데기 보드의 블록공간
+                List<List<int>> tetrisArray;
+            }            
+            ```
+            블록이 쌓일 때 마다 블록정보를 저장하는 알맹이 보드(자식) 생성시 껍데기 보드가 존재하는 주소를 할당해주면, 
+            껍데기 보드의 공간을 초기화 시키면 같은 주소를 참조하고 있는 알맹이 보드의 공간도 초기화된다.
+            
+            ![image](https://user-images.githubusercontent.com/53106848/207202056-609d01b3-306c-4823-8c02-ec1c53792ad7.png)
+            ```C#
+            class 알맹이 보드(자식) : 껍데기 보드(부모){
+            
+                // 블록이 쌓일 때 마다 블록정보를 저장하는 알맹이 보드(자식)
+                static public List<List<int>> tetrisStackArray;                                                
+                
+                public TetrisDataSaveScreen(TetrisScreen tetrisScreen) : base(tetrisScreen.tetrisBoardGetX, tetrisScreen.tetrisBoardGetY) {
+                    saveBlockMake();
+                }
+                
+                // 알맹이 보드 블록공간 생성
+                public void saveBlockMake() {
+                    tetrisStackArray = new List<List<int>>();
+                    for (int i = 0; i < tetrisBoardGetY; i++)
+                    {
+                        tetrisStackArray.Add(new List<int>());
+                        for (int j = 0; j < tetrisBoardGetX; j++)
+                        {
+                            tetrisStackArray[i].Add((int)TetrisBlock.NONBLOCK);
+                        }
+                    }                    
+                }
+                
+            }
+            
+            class TetrisScreen(껍데기 보드){
+                // 껍데기 보드의 블록공간
+                List<List<int>> tetrisArray;
+            }            
+            ```
+            껍데기 보드와 알맹이 보드의 객체를 각각 생성해야지 힙메모리 영역의 서로 다른 주소를 참조하기 때문에 서로 영향을 주지 않는다.
     - [ ] 기존에 쌓인 블록과 충돌하면 멈추고 새로운 블록 생성
 
        
