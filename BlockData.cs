@@ -7,9 +7,6 @@ using System.Threading.Tasks;
 
 partial class BlockData
 {
-    // 모든 블록의 관리하려고 한다.
-    // 총 7개의 블록의 모든 방향을 관리할수 있는 형태는? 
-    // allBlockData[블록의 종류][블록의 회전 방향]
 
     // 머릿속으로만 계산하는 것은 좋지 않음    
     /*
@@ -23,12 +20,16 @@ partial class BlockData
      */
 
     // 모든 블록을 관리하는 것을 배열 또는 리스트로 만든다.
-    List<List<int[,]>> allBlockData = new List<List<int[,]>>();
-    // string[ , , , ] allBlockData2 = new string[7,4,4,4];
+    private List<List<int[,]>> allBlockData = new List<List<int[,]>>();
 
     // 모든 블록의 모양이 들어갈 공간의 최대 가로길이와 최대 세로길이 
-    public int widthMaxLength = 4;
-    public int heightMaxLength = 4;
+    public int widthMaxLength;
+    public int heightMaxLength;
+
+    public BlockData(int width, int height) {
+        this.widthMaxLength = width;
+        this.heightMaxLength = height;
+    }
 
     public List<List<int[,]>> AllBlockData
     {

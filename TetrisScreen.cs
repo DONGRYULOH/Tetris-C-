@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+// 테트리스 보드에서 역할을 담당할 블록종류
 enum TetrisBlock
 {
     NONBLOCK = 0,  // 테트리스 판에서 비어있는 블록 
@@ -72,10 +74,7 @@ class TetrisScreen
                     tetrisArray[y][x] = TetrisDataSaveScreen.tetrisStackArray[y][x];
                 }
             }
-        }
-
-        // 알맹이 보드에 쌓인 블록의 데이터가 어디선가 초기화 되고 있음
-        Console.WriteLine(TetrisDataSaveScreen.tetrisStackArray); 
+        }        
 
     }
 

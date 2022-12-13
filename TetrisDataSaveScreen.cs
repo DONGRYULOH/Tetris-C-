@@ -26,11 +26,7 @@ internal class TetrisDataSaveScreen : TetrisScreen
         // 1. base() 생성자의 인자값으로 부모 테트리스 보드의 X, Y 좌표를 설정한다. 
         // why? 자식 테트리스 보드(블록이 쌓일 때 마다 블록 정보를 저장하는 보드)를 만들기 위해서는 부모의 테트리스 보드 X축, Y축 길이를 가져와야 한다.
 
-        this.tetrisScreen = tetrisScreen;
-
-        // 껍데기 보드 객체가 있는 주소를 똑같이 알맹이 보드에게 전달하니까 껍데기 보드의 데이터가 사라지면 똑같이 알맹이 보드의 데이터도 사라짐
-        // tetrisStackArray = tetrisScreen.TetristArray;  
-
+        this.tetrisScreen = tetrisScreen;        
         saveBlockMake();
     }
     
