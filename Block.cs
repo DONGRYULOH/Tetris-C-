@@ -203,7 +203,7 @@ partial class Block
         currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
 
 
-        // 현재 움직이고 있는 블록의 좌표값을 가져와서 아래로 한칸 이동했을때 맨아래층의 벽과 충돌하는지 확인 
+        // 1.현재 움직이고 있는 블록의 좌표값을 가져와서 아래로 한칸 이동했을때 맨아래층의 벽과 충돌하는지 확인 
         for (int a = 0; a < blockData.widthMaxLength; a++)
         {
             for (int b = 0; b < blockData.heightMaxLength; b++)
@@ -212,18 +212,17 @@ partial class Block
                 {
                     // 블록이 더 이상 내려갈수 없으면(벽이 있으면) 자식 테트리스 보드에 블럭을 쌓는다.         
                     if (tempY + a + 1 == bottomtWall)
-                    {
-                        // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장                                    
-                        tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape);
-                        // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
-                        randomBlockTypeMake();
+                    {                        
+                        tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape); // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장                                    
+                        tetrisDataSaveScreen.blockFullCheck(); // 블록이 다 차있는 라인이 있는지 검사                      
+                        randomBlockTypeMake();    // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
                         return false; // 이동 불가능
                     }
                 }
             }
         }
 
-        // 현재 움직이고 있는 블록의 좌표값을 가져와서 쌓여있는 블록과 충돌하는지 확인 
+        // 알맹이 보드에 쌓여있는 블록의 좌표값을 가져와서 현재 움직이고 있는 블록과 충돌하는지 확인 
         for (int y = 0; y < TetrisDataSaveScreen.tetrisStackArray.Count; y++)
         {
             for (int x = 0; x < TetrisDataSaveScreen.tetrisStackArray[y].Count; x++)
@@ -236,14 +235,14 @@ partial class Block
                         {                            
                             if (currentBlockShape[a, b] == 1) // 블록이 존재하는 좌표값일 경우만 
                             {
-                                // 블록이 더 이상 내려갈수 없으면(벽이 있으면) 자식 테트리스 보드에 블럭을 쌓는다.         
+                                // 블록이 더 이상 내려갈수 없으면(벽이 있으면) 자식 테트리스 보드에 블럭을 쌓는다.
+                                // 껍데기 보드상의 블록 위치 + 블록의 모양을 저장하는 공간에서 블록이 있는 좌표값을 가져옴 + 아래로 한칸 이동 == 알맹이 보드에 쌓여 있는 블록의 Y좌표값과 일치
                                 if (tempY + a + 1 == y)
                                 {
-                                    if(tempX + b  == x) { 
-                                        // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장                                    
-                                        tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape);
-                                        // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
-                                        randomBlockTypeMake();
+                                    if(tempX + b  == x) {                                         
+                                        tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape); // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장                                    
+                                        tetrisDataSaveScreen.blockFullCheck(); // 블록이 다 차있는 라인이 있는지 검사                                         
+                                        randomBlockTypeMake(); // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
                                         return false; // 이동 불가능
                                     }
                                 }
