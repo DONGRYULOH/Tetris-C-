@@ -91,8 +91,43 @@
     - [ ] 기존에 쌓인 블록과 충돌하면 멈추고 새로운 블록 생성
       ![image](https://user-images.githubusercontent.com/53106848/207268637-77c6604a-7743-4a3a-8463-d0dc3fb029aa.png)
       Y좌표와 X좌표가 기존에 쌓인 블록가 일치하는 경우에만 멈춘다.
-      (맨 아래층은 모두 벽이기 때문에 벽인지 아닌지 판단하면 되므로 Y좌표만 검사하면 된다.)
-
+      (맨 아래층은 모두 벽이기 때문에 벽인지 아닌지 판단하면 되므로 Y좌표만 검사하면 된다.)            
+      ![image](https://user-images.githubusercontent.com/53106848/207489135-01c0bde2-4a0c-40eb-8515-e27af5652ce4.png)
+      ![image](https://user-images.githubusercontent.com/53106848/207489221-4de4bc42-39e4-4a69-b723-415e361f413f.png)
+      ```C#
+        // 알맹이 보드에 쌓여있는 블록의 좌표값을 가져와서 현재 움직이고 있는 블록과 충돌하는지 확인 
+        for (int y = 0; y < TetrisDataSaveScreen.tetrisStackArray.Count; y++)
+        {
+            for (int x = 0; x < TetrisDataSaveScreen.tetrisStackArray[y].Count; x++)
+            {
+                // 알맹이 보드에 쌓여있는 블록의 좌표값을 모두 가져온다.        
+                if (TetrisDataSaveScreen.tetrisStackArray[y][x] == (int)TetrisBlock.MOVEBLOCK) {
+                    for (int a = 0; a < blockData.widthMaxLength; a++)
+                    {
+                        for (int b = 0; b < blockData.heightMaxLength; b++)
+                        {                            
+                            if (currentBlockShape[a, b] == 1) // 블록이 존재하는 좌표값일 경우만 
+                            {
+                                // 블록이 더 이상 내려갈수 없으면(벽이 있으면) 자식 테트리스 보드에 블럭을 쌓는다.
+                                // 껍데기 보드상의 블록 위치 + 블록의 모양을 저장하는 공간에서 블록이 있는 좌표값을 가져옴 + 아래로 한칸 이동 == 알맹이 보드에 쌓여 있는 블록의 Y좌표값과 일치
+                                if (tempY + a + 1 == y)
+                                {
+                                    if(tempX + b  == x) { 
+                                        // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장                                    
+                                        tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape);
+                                        // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
+                                        randomBlockTypeMake();
+                                        return false; // 이동 불가능
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }              
+            }
+        }
+        ```
+        움직이고 있는 블록위치의 좌표값 + 블록의 모양을 저장하는 공간에서 블록이 있는 좌표값 + 아래(Y축방향)로 이동하면 이동한 블록의 위치를 테트리스 보드상에 그려줄 수 있다.
 
        
 5. 랜덤으로 생성될 블록
