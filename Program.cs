@@ -30,7 +30,7 @@ namespace Tetris
             tetrisScreen.TetrisRender();
 
             // 2.테트리스 블록 생성
-            BlockData blockDataInfo = new BlockData(4, 4);
+            BlockData blockDataInfo = new BlockData();
             Block block = new Block(tetrisScreen, blockDataInfo, saveTetrisScreen);
             tetrisScreen.getBlockInfo(block);
 
