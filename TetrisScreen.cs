@@ -21,6 +21,38 @@ class TetrisScreen
     // 블록에 대한 정보
     Block block;
 
+    // x * y 공간의 테트리스 판 만들기 
+    public TetrisScreen(int x, int y)
+    {
+        tetrisArray = new List<List<int>>();
+        for (int i = 0; i < y; i++)
+        {
+            tetrisArray.Add(new List<int>());
+            for (int j = 0; j < x; j++)
+            {
+                tetrisArray[i].Add((int)TetrisBlock.NONBLOCK);
+            }
+        }
+
+        createTetrisWall(tetrisArray);
+    }
+
+    // 테트리스의 벽을 생성 
+    public void createTetrisWall(List<List<int>> tetrisArray) {
+        // <벽의 역할을 담당할 블록>        
+        // 1. 마지막 테트리스 공간을 벽으로 설정 
+        for (int i = 0; i < tetrisArray[tetrisArray.Count - 1].Count; i++)
+        {
+            tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
+        }
+        // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
+        for (int i = 0; i < tetrisArray.Count; i++)
+        {
+            tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
+            tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
+        }
+    }
+
     public List<List<int>> TetristArray
     {
         get { return tetrisArray; }
@@ -51,20 +83,12 @@ class TetrisScreen
             {                
                tetrisArray[y][x] = (int)TetrisBlock.NONBLOCK;                
             }
-        }        
-        // 마지막 테트리스 공간을 벽으로 설정 
-        for (int i = 0; i < tetrisArray[tetrisArray.Count - 1].Count; i++)
-        {
-            tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
-        }
-        // 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
-        for (int i = 0; i < tetrisArray.Count; i++)
-        {
-            tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
-            tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
         }
 
+        createTetrisWall(tetrisArray);
+
         // 2. 알맹이 보드에 쌓인 블럭을 껍데기 보드에 그려줌
+        // static 클래스도 아니고 상속받지 않았는데 어떻게 TetrisDataSaveScreen에 접근할수 있는지??
         for (int y = 0; y < TetrisDataSaveScreen.tetrisStackArray.Count; y++)
         {
             for (int x = 0; x < TetrisDataSaveScreen.tetrisStackArray[y].Count; x++)
@@ -78,32 +102,7 @@ class TetrisScreen
 
     }
 
-    // x * y 공간의 테트리스 판 만들기 
-    public TetrisScreen(int x, int y)
-    {        
-        tetrisArray = new List<List<int>>();
-        for (int i = 0; i < y; i++)
-        {
-            tetrisArray.Add(new List<int>());
-            for (int j = 0; j < x; j++)
-            {
-                tetrisArray[i].Add((int)TetrisBlock.NONBLOCK);
-            }
-        }
-
-        // <벽의 역할을 담당할 블록>        
-        // 1. 마지막 테트리스 공간을 벽으로 설정 
-        for (int i = 0; i < tetrisArray[tetrisArray.Count - 1].Count; i++)
-        {
-            tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
-        }
-        // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
-        for (int i = 0; i < tetrisArray.Count; i++)
-        {
-            tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
-            tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
-        }        
-    }
+    
 
     // 테트리스 판을 화면에 그려주기 
     public virtual void TetrisRender()

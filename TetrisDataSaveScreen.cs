@@ -28,6 +28,7 @@ internal class TetrisDataSaveScreen : TetrisScreen
         // why? 자식 테트리스 보드(블록이 쌓일 때 마다 블록 정보를 저장하는 보드)를 만들기 위해서는 부모의 테트리스 보드 X축, Y축 길이를 가져와야 한다.
 
         this.tetrisScreen = tetrisScreen;
+
         saveBlockMake();
     }
 
@@ -44,7 +45,8 @@ internal class TetrisDataSaveScreen : TetrisScreen
             }
         }
 
-        // <벽의 역할을 담당할 블록>        
+        // <벽의 역할을 담당할 블록>
+        // 왜 벽을 만들어주지??? 
         // 1. 마지막 테트리스 공간을 벽으로 설정 
         for (int i = 0; i < tetrisStackArray[tetrisStackArray.Count - 1].Count; i++)
         {
