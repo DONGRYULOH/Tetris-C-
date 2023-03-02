@@ -15,77 +15,83 @@ enum TetrisBlock
 
 class TetrisScreen
 {
-    // 움직인 테트리스 블럭이 보여지는 공간
-    List<List<int>> tetrisArray;    
+    // 화면상에 보여지는 보드
+    List<List<int>> frontTetrisScreen;
 
-    // 블록에 대한 정보
-    Block block;
+    // 쌓인 블록 정보를 저장하는 보드
+    List<List<int>> backTetrisScreen;
 
     // x * y 공간의 테트리스 판 만들기 
     public TetrisScreen(int x, int y)
     {
-        tetrisArray = new List<List<int>>();
+        frontTetrisScreen = new List<List<int>>();
         for (int i = 0; i < y; i++)
         {
-            tetrisArray.Add(new List<int>());
+            frontTetrisScreen.Add(new List<int>());
             for (int j = 0; j < x; j++)
             {
-                tetrisArray[i].Add((int)TetrisBlock.NONBLOCK);
+                frontTetrisScreen[i].Add((int)TetrisBlock.NONBLOCK);
             }
         }
 
-        createTetrisWall(tetrisArray);
+        backTetrisScreen = new List<List<int>>();
+        for (int i = 0; i < y; i++)
+        {
+            backTetrisScreen.Add(new List<int>());
+            for (int j = 0; j < x; j++)
+            {
+                backTetrisScreen[i].Add((int)TetrisBlock.NONBLOCK);
+            }
+        }
+
+        createTetrisWall(frontTetrisScreen);
+        createTetrisWall(backTetrisScreen);
     }
 
     // 테트리스의 벽을 생성 
-    public void createTetrisWall(List<List<int>> tetrisArray) {
+    public void createTetrisWall(List<List<int>> frontTetrisScreen) {
         // <벽의 역할을 담당할 블록>        
         // 1. 마지막 테트리스 공간을 벽으로 설정 
-        for (int i = 0; i < tetrisArray[tetrisArray.Count - 1].Count; i++)
+        for (int i = 0; i < frontTetrisScreen[frontTetrisScreen.Count - 1].Count; i++)
         {
-            tetrisArray[tetrisArray.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
+            frontTetrisScreen[frontTetrisScreen.Count - 1][i] = (int)TetrisBlock.WALLBLOCK;
         }
         // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
-        for (int i = 0; i < tetrisArray.Count; i++)
+        for (int i = 0; i < frontTetrisScreen.Count; i++)
         {
-            tetrisArray[i][0] = (int)TetrisBlock.WALLBLOCK;
-            tetrisArray[i][tetrisArray[tetrisArray.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
+            frontTetrisScreen[i][0] = (int)TetrisBlock.WALLBLOCK;
+            frontTetrisScreen[i][frontTetrisScreen[frontTetrisScreen.Count - 1].Count - 1] = (int)TetrisBlock.WALLBLOCK;
         }
     }
 
     public List<List<int>> TetristArray
     {
-        get { return tetrisArray; }
+        get { return frontTetrisScreen; }
     }    
 
     // 테트리스 보드의 X, Y축 
     public int tetrisBoardGetX
     { 
-        get { return tetrisArray[0].Count; }    
+        get { return frontTetrisScreen[0].Count; }    
     }
     public int tetrisBoardGetY
     {
-        get { return tetrisArray.Count; }
-    }
-
-    // 블록에 대한 정보를 가져온다.
-    public void getBlockInfo(Block block) { 
-        this.block = block;
+        get { return frontTetrisScreen.Count; }
     }
 
     // 블럭이 이동하기 전에 테트리스 판을 초기화 시킨다.
     public void tetrisBoardInit()
     {
         // 1.벽을 제외한 껍데기 보드의 모든 공간을 빈 블럭으로 초기화
-        for (int y = 0; y < tetrisArray.Count; y++)
+        for (int y = 0; y < frontTetrisScreen.Count; y++)
         {
-            for (int x = 0; x < tetrisArray[y].Count; x++)
+            for (int x = 0; x < frontTetrisScreen[y].Count; x++)
             {                
-               tetrisArray[y][x] = (int)TetrisBlock.NONBLOCK;                
+               frontTetrisScreen[y][x] = (int)TetrisBlock.NONBLOCK;                
             }
         }
 
-        createTetrisWall(tetrisArray);
+        createTetrisWall(frontTetrisScreen);
 
         // 2. 알맹이 보드에 쌓인 블럭을 껍데기 보드에 그려줌
         // static 클래스도 아니고 상속받지 않았는데 어떻게 TetrisDataSaveScreen에 접근할수 있는지??
@@ -95,7 +101,7 @@ class TetrisScreen
             {
                 if (TetrisDataSaveScreen.tetrisStackArray[y][x] == (int)TetrisBlock.MOVEBLOCK)
                 {
-                    tetrisArray[y][x] = TetrisDataSaveScreen.tetrisStackArray[y][x];
+                    frontTetrisScreen[y][x] = TetrisDataSaveScreen.tetrisStackArray[y][x];
                 }
             }
         }        
@@ -104,14 +110,14 @@ class TetrisScreen
 
     
 
-    // 테트리스 판을 화면에 그려주기 
+    // 테트리스 블록을 보드에 그리기
     public virtual void TetrisRender()
     {
-        for (int y = 0; y < tetrisArray.Count; y++)
+        for (int y = 0; y < frontTetrisScreen.Count; y++)
         {
-            for (int x = 0; x < tetrisArray[y].Count; x++)
+            for (int x = 0; x < frontTetrisScreen[y].Count; x++)
             {
-                switch (tetrisArray[y][x])
+                switch (frontTetrisScreen[y][x])
                 {
                     case (int)TetrisBlock.NONBLOCK:
                         Console.Write("□");

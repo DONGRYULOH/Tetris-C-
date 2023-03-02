@@ -48,7 +48,7 @@ enum BlockType
     BT_T = 6
 }
 
-partial class Block
+partial class Block 
 {
     // 블록이 어디서부터 시작될지 나타내는 좌표
     int x = 0;
@@ -71,7 +71,7 @@ partial class Block
     // 랜덤 블록 생성을 위한 랜덤 함수
     Random randomBlock = new Random();
 
-    public Block(TetrisScreen tetrisScreen, BlockData blockData, TetrisDataSaveScreen tetrisDataSaveScreen)
+    public Block(TetrisScreen tetrisScreen, BlockData blockData)
     {
         // 블록 객체를 생성할때 무조건 생성자로 테트리스 스크린 정보를 가져와야 한다. 
         // 테트리스 스크린 정보가 있어야지 블록이 이동했을 때 스크린에다가 이동된 블록을 표시해 줄 수 있다.    
@@ -83,9 +83,6 @@ partial class Block
 
         // 랜덤 블록 생성
         randomBlockTypeMake();
-
-        // 쌓여있는 블록을 담고 있는 알맹이 보드
-        this.tetrisDataSaveScreen = tetrisDataSaveScreen;
     }
 
     // 보드에 블록을 그린다.
@@ -165,7 +162,6 @@ partial class Block
     // 키보드의 방향키를 눌렀을 때 블럭이 이동할 방향   
     public void keyInput(ConsoleKey inputKey)
     {
-
         switch (inputKey)
         {
             case ConsoleKey.UpArrow: // 블록회전

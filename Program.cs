@@ -36,15 +36,14 @@ namespace Tetris
                 보드를 초기화 하고 기존에 쌓여있던 블록을 보드에 넣어줘야 되는 과정에서 
                 초기화를 하게 되면 쌓여있던 블록의 데이터가 날라가니까 쌓여있는 블록이 저장되어 있는 보드가 필요                   
             */
-            TetrisScreen tetrisScreen = new TetrisScreen(x , y); // 테트리스 보드
-            TetrisDataSaveScreen saveTetrisScreen = new TetrisDataSaveScreen(tetrisScreen); // 블럭 저장용 테트리스 보드 
-            tetrisScreen.TetrisRender();
+            TetrisScreen tetrisScreen = new TetrisScreen(x , y); // 화면에 보여질 테트리스 보드            
+            tetrisScreen.TetrisRender();                       
 
             // 2.테트리스 블록 생성
-            BlockData blockDataInfo = new BlockData(4, 4);
-            Block block = new Block(tetrisScreen, blockDataInfo, saveTetrisScreen);
-            tetrisScreen.getBlockInfo(block);
-
+            BlockData blockDataInfo = new BlockData(); // 모든 블록의 종류별 모양 생성 
+            Block block = new Block(tetrisScreen, blockDataInfo);             
+           
+            // 3. 테트리스 시작
             while (true)
             {
                 Thread.Sleep(300); 

@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+/*
+     모든 블록의 종류별 모양을 가지고 있는 클래스 
+ */
+
 partial class BlockData
 {
 
@@ -23,13 +27,8 @@ partial class BlockData
     private List<List<int[,]>> allBlockData = new List<List<int[,]>>();
 
     // 모든 블록의 모양이 들어갈 공간의 최대 가로길이와 최대 세로길이 
-    public int widthMaxLength;
-    public int heightMaxLength;
-
-    public BlockData(int width, int height) {
-        this.widthMaxLength = width;
-        this.heightMaxLength = height;
-    }
+    private const int WIDTH_MAX_LENGTH = 4;
+    private const int HEIGHT_MAX_LENGTH = 4;
 
     public List<List<int[,]>> AllBlockData
     {

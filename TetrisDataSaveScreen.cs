@@ -6,27 +6,17 @@ using System.Threading.Tasks;
 
 
 /*
-    <블록이 쌓일 때 마다 블록 정보를 저장하는 테트리스 보드>
+     블록이 쌓이고 지워질 때마다 블록 정보를 저장하는 보드(알맹이 보드)
  */
-internal class TetrisDataSaveScreen : TetrisScreen
+internal class TetrisDataSaveScreen
 {
-    // 블록이 이동하거나 회전할 때 마다 새로 그리는 보드(부모)
+    // 블록이 이동하거나 회전할 때 마다 새로 그리는 보드(껍데기 보드)
     TetrisScreen tetrisScreen;
-
-    // 블록이 쌓일 때 마다 블록 정보를 저장하는 보드(자식)
+   
     static public List<List<int>> tetrisStackArray;
 
-    public TetrisDataSaveScreen(TetrisScreen tetrisScreen) : base(tetrisScreen.tetrisBoardGetX, tetrisScreen.tetrisBoardGetY)
-    {
-        /*
-                base() 생성자 : 자식 클래스의 생성자에서 부모 클래스의 생성자를 초기화 하는 경우
-                부모 클래스가 먼저 생성되야지 상속을 받을 수 있는데 부모 인스턴스를 생성하기 위해서는 
-                생성자 호출이 일어나기 때문에 부모 클래스의 생성자를 초기화 시켜 준다. 
-        */
-
-        // 1. base() 생성자의 인자값으로 부모 테트리스 보드의 X, Y 좌표를 설정한다. 
-        // why? 자식 테트리스 보드(블록이 쌓일 때 마다 블록 정보를 저장하는 보드)를 만들기 위해서는 부모의 테트리스 보드 X축, Y축 길이를 가져와야 한다.
-
+    public TetrisDataSaveScreen(TetrisScreen tetrisScreen)
+    {        
         this.tetrisScreen = tetrisScreen;
 
         saveBlockMake();
@@ -36,10 +26,10 @@ internal class TetrisDataSaveScreen : TetrisScreen
     public void saveBlockMake()
     {
         tetrisStackArray = new List<List<int>>();
-        for (int i = 0; i < tetrisBoardGetY; i++)
+        for (int i = 0; i < tetrisScreen.tetrisBoardGetY; i++)
         {
             tetrisStackArray.Add(new List<int>());
-            for (int j = 0; j < tetrisBoardGetX; j++)
+            for (int j = 0; j < tetrisScreen.tetrisBoardGetX; j++)
             {
                 tetrisStackArray[i].Add((int)TetrisBlock.NONBLOCK);
             }
