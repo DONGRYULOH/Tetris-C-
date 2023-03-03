@@ -27,14 +27,28 @@ partial class BlockData
     private List<List<int[,]>> allBlockData = new List<List<int[,]>>();
 
     // 모든 블록의 모양이 들어갈 공간의 최대 가로길이와 최대 세로길이 
-    private const int WIDTH_MAX_LENGTH = 4;
-    private const int HEIGHT_MAX_LENGTH = 4;
+    private const int BLOCK_WIDTH_LENGTH = 4;
+    private const int BLOCK_HEIGHT_LENGTH = 4;
+
+    public BlockData() {
+        DataInit();
+    }
 
     public List<List<int[,]>> AllBlockData
     {
         get { return allBlockData; }
     }
 
+    public int BlockWidthLength {
+        get { return BLOCK_WIDTH_LENGTH; }
+    }
+
+    public int BlockHeightLength
+    {
+        get { return BLOCK_HEIGHT_LENGTH; }
+    }
+
+    // 7개의 테트리스 블록 모양과 종류를 만든다.
     public void DataInit()
     {
         // <7개의 블록 종류에 해당되는 모든 회전모양을 2차원 배열로 만들어둔다.>

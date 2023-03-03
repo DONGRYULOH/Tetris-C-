@@ -15,11 +15,16 @@ enum TetrisBlock
 
 class TetrisScreen
 {
+    /* 멤버변수 */
+
     // 화면상에 보여지는 보드
     List<List<int>> frontTetrisScreen;
 
     // 쌓인 블록 정보를 저장하는 보드
     List<List<int>> backTetrisScreen;
+
+
+    /* 생성자 함수 */
 
     // x * y 공간의 테트리스 판 만들기 
     public TetrisScreen(int x, int y)
@@ -48,6 +53,26 @@ class TetrisScreen
         createTetrisWall(backTetrisScreen);
     }
 
+    /* getter, setter */
+
+    public List<List<int>> TetristArray
+    {
+        get { return frontTetrisScreen; }
+    }
+
+    // 테트리스 보드의 X, Y축 
+    public int tetrisBoardGetX
+    {
+        get { return frontTetrisScreen[0].Count; }
+    }
+    public int tetrisBoardGetY
+    {
+        get { return frontTetrisScreen.Count; }
+    }
+
+
+    /* 메서드 */
+
     // 테트리스의 벽을 생성 
     public void createTetrisWall(List<List<int>> frontTetrisScreen) {
         // <벽의 역할을 담당할 블록>        
@@ -64,20 +89,7 @@ class TetrisScreen
         }
     }
 
-    public List<List<int>> TetristArray
-    {
-        get { return frontTetrisScreen; }
-    }    
 
-    // 테트리스 보드의 X, Y축 
-    public int tetrisBoardGetX
-    { 
-        get { return frontTetrisScreen[0].Count; }    
-    }
-    public int tetrisBoardGetY
-    {
-        get { return frontTetrisScreen.Count; }
-    }
 
     // 블럭이 이동하기 전에 테트리스 판을 초기화 시킨다.
     public void tetrisBoardInit()
@@ -134,5 +146,55 @@ class TetrisScreen
             }
             Console.WriteLine("");
         }
+    }
+
+    // 벽을 제외한 맨 아래쪽 부터 블록이 다 차있는 라인이 있는지 검사 
+    public void blockFullCheck()
+    {
+        int blockCount = tetrisBoardGetX - 2; // 한 라인이 모두 블록으로 가득 차 있는지 체크
+        int downCount = 0; // 블록이 아래로 이동할 횟수 
+        bool blockLineFullChk = false; // 블록으로 가득 찬 라인이 하나라도 있는지 체크
+
+        // 가득 차 있는 블록라인을 비어있는 블록라인으로 변경
+
+        // 1. 해당 라인이 모두 블록으로 차 있는지 확인 
+        // 2. 블록으로 모두 차 있으면 해당 라인을 비어있는 블록으로 변경 후 이동횟수 1증가(누적 1) 
+        // 3. 그 다음 블록라인이 모두 블록으로 차 있는지 확인
+        // 4. 블록으로 차있지 않은 경우 이동횟수 만큼 아래로 이동 
+        // 5. 이동 하기전 블록 라인에 있는 모든 블록을 비어있는 블록으로 변경 
+        // 6. 그 다음 블록라인이 꽉차 있는지 체크 
+        // 7. 블록으로 모두 차 있으면 비어있는 블록으로 변경 후 이동횟수 1증가(누적 2)
+        // 8. 그 다음 블록라인이 꽉차 있는지 체크
+        // 9. 블록으로 차있지 않은 경우 이동횟수 만큼 아래로 이동
+        // 10. 이동 하기전 블록 라인에 있는 모든 블록을 비어있는 블록으로 변경
+        // 11. 맨위의 블록라인까지 1~10번 과정을 수행 
+        for (int i = tetrisBoardGetY - 2; i >= 0; i--)
+        {
+            for (int j = 1; j < tetrisBoardGetX - 1; j++)
+            {
+                if (TetristArray[i][j] == (int)TetrisBlock.MOVEBLOCK)
+                {
+                    blockCount--; // 블록이 있으면 하나씩 차감                    
+                }
+            }
+            // 블록으로 가득차있는 라인
+            if (blockCount == 0)
+            {
+                // 해당라인을 비어있는 블록으로 변경 
+                for (int a = 1; a < tetrisBoardGetX - 1; a++)
+                {
+                    frontTetrisScreen[i][a] == (int)TetrisBlock.NONBLOCK;
+
+                }
+                
+            }
+            blockCount = tetrisBoardGetX - 2;
+        }
+
+        // 블록으로 가득찬 라인이 하나도 없는 경우 
+        if (blockLineFullChk == false) { 
+            
+        }
+
     }
 }

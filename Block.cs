@@ -51,10 +51,10 @@ enum BlockType
 partial class Block 
 {
     // 블록이 어디서부터 시작될지 나타내는 좌표
-    int x = 0;
-    int y = 0;
+    public int x = 0;
+    public int y = 0;
 
-    // 블록을 이동하고 나서 껍데기 보드에 이동된 블록을 그려주기 위해 필요
+    // 테트리스 보드
     TetrisScreen tetrisScreen;
 
     // 모든 블록에 대한 정보(종류, 회전방향)
@@ -65,9 +65,6 @@ partial class Block
     BlockType currentBlockType;
     BlockRotate currentBlockRotate;
 
-    // 쌓여있는 블록을 담고 있는 알맹이 보드
-    TetrisDataSaveScreen tetrisDataSaveScreen;
-
     // 랜덤 블록 생성을 위한 랜덤 함수
     Random randomBlock = new Random();
 
@@ -77,8 +74,7 @@ partial class Block
         // 테트리스 스크린 정보가 있어야지 블록이 이동했을 때 스크린에다가 이동된 블록을 표시해 줄 수 있다.    
         this.tetrisScreen = tetrisScreen;        
 
-        // 모든 블록에 대한 정보
-        blockData.DataInit();
+        // 모든 블록에 대한 정보        
         this.blockData = blockData;
 
         // 랜덤 블록 생성
@@ -90,6 +86,7 @@ partial class Block
 
         // 블록 이동시 벽이 있는지 확인 
         bool moveCheck = blockMoveWallCheck(inputKey);
+
         if (moveCheck == false) return;
 
         // 방향키에 해당되는 방향으로 좌표값을 이동
@@ -170,7 +167,22 @@ partial class Block
                 // 2. 그 블록을 어느 방향으로 회전시킬건지                                 
                 draw(inputKey);
                 break;
-            case ConsoleKey.DownArrow: // 아래로 1 이동                
+            case ConsoleKey.DownArrow: // 아래로 1 이동
+
+                // 1. 아래쪽 벽과 충돌하는가?                
+                int bottomtWall = tetrisScreen.TetristArray.Count - 1; // 테트리스 보드의 맨아래쪽 벽 (y축 길이 - 1)
+                bool wallCheck = downWallCheck(this.x, this.y, bottomtWall);
+
+                if (wallCheck == true) {
+                    // 블록으로 가득찬 라인이 있는지 체크 
+                    tetrisScreen.blockFullCheck();
+                    
+                }
+                else { 
+                    // 쌓여있는 블록과 충돌하는지 체크                 
+                }
+
+
                 draw(inputKey);                
                 break;
             case ConsoleKey.LeftArrow: // 왼쪽으로 1이동                
@@ -200,25 +212,20 @@ partial class Block
 
     // 블럭이 아래로 이동시 벽이 있는지 확인
     public bool downWallCheck(int tempX, int tempY, int bottomtWall)
-    {        
-        // 현재 움직이고 있는 블록을 가져옴
-        currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate];
-
+    {                
+        currentBlockShape = blockData.AllBlockData[(int)currentBlockType][(int)currentBlockRotate]; // 현재 움직이고 있는 블록을 가져옴
 
         // 1.현재 움직이고 있는 블록의 좌표값을 가져와서 아래로 한칸 이동했을때 맨아래층의 벽과 충돌하는지 확인 
-        for (int a = 0; a < blockData.widthMaxLength; a++)
+        for (int a = 0; a < blockData.BlockWidthLength; a++)
         {
-            for (int b = 0; b < blockData.heightMaxLength; b++)
+            for (int b = 0; b < blockData.BlockHeightLength; b++)
             {
                 if (currentBlockShape[a, b] == 1)
                 {
-                    // 블록이 더 이상 내려갈수 없으면(벽이 있으면) 자식 테트리스 보드에 블럭을 쌓는다.         
+                    // 아래쪽 벽과 충돌하는 경우 이동 불가능 
                     if (tempY + a + 1 == bottomtWall)
                     {                        
-                        tetrisDataSaveScreen.blockSave(tempX, tempY, currentBlockShape); // 벽이 있으면 블록이 위치하고 있는 좌표값을 알맹이 보드에 저장                                    
-                        tetrisDataSaveScreen.blockFullCheck(); // 블록이 다 차있는 라인이 있는지 검사                      
-                        randomBlockTypeMake();    // 랜덤블록생성 후 블록이 떨어지는 위치값 초기화
-                        return false; // 이동 불가능
+                        return true; 
                     }
                 }
             }
@@ -350,10 +357,7 @@ partial class Block
 
     // 블럭이 이동한다.    
     public void moveBlock()
-    {
-        // 테트리스 맵을 초기화  
-        tetrisScreen.tetrisBoardInit(); 
-
+    {        
         // 플레이어가 방향키를 눌렀을때 
         if (Console.KeyAvailable == true)
         {
