@@ -11,7 +11,7 @@ using Tetris;
 partial class Block 
 {
     // 블록의 회전방향
-    enum RotateDirection
+    public enum RotateDirection
     {
         RA = 0,
         RB = 1,
@@ -28,32 +28,59 @@ partial class Block
         STACKBLOCK = 3  // 쌓여있는 블록
     }
 
-    // 이동하고 있는 블록
-    public int[,] currentMoveBlock;
+    // 이동하고 있는 블록 종류
+    public List<int[,]> currentMoveBlock;
 
     // 이동하고 있는 블록의 위치값
-    public int movePositionX;
-    public int movePositionY;
+    private int movePositionX;
+    private int movePositionY;
 
-    // 이동하고 있는 블록 회전방향    
-    RotateDirection currentBlockRotate = (int)RotateDirection.RA;
+    // 이동하고 있는 블록 회전방향        
+    private RotateDirection currentBlockRotate;
+
+    // 모든 블록의 모양
+    BlockShape blockShape;
 
     public Block(BlockShape blockShape)
-    {        
-        this.movePositionY = 0;
-        this.movePositionX = 1;
+    {
+        this.blockShape = blockShape;                
+        randomBlockPick(); // 7개의 블록중에서 이동할 블록을 랜덤으로 뽑기 
+    }
 
-        randomBlockPick(blockShape); // 7개의 블록중에서 이동할 블록을 랜덤으로 뽑기 
+    public int MovePositionX
+    {
+        get { return movePositionX; }
+        set { this.movePositionX = value; }
+    }
+
+    public int MovePositionY
+    {
+        get { return movePositionY; }
+        set { this.movePositionY = value; }
+    }
+
+    public RotateDirection CurrentBlockRotate
+    {
+        get { return currentBlockRotate; }
+        set { this.currentBlockRotate = value; }
     }
 
     // 랜덤 블록 뽑기
-    public void randomBlockPick(BlockShape blockShape) {
+    public void randomBlockPick() {
+        BlockInit(); // 떨어지는 블록의 시작 좌표값 초기화 
+
         Random randomBlock = new Random();
 
-        int randomBlockType = randomBlock.Next((int)BlockType.BT_I, (int)BlockType.BT_T); // 0부터 6 사이의 랜덤 블록 종류 뽑기                 
+        int randomBlockType = randomBlock.Next((int)BlockType.BT_I, (int)BlockType.BT_T); // 0부터 6 사이의 랜덤 블록 종류 뽑기
         
-        currentMoveBlock = blockShape.BlockTypeDatas[randomBlockType]; // 이동할 블록의 모양을 가져옴
+        currentMoveBlock = this.blockShape.BlockTypeDatas[randomBlockType];
+    }
 
+    // 블록 초기화
+    public void BlockInit() {
+        this.movePositionY = 0;
+        this.movePositionX = 1;
+        currentBlockRotate = (int)RotateDirection.RA;             
     }
 
     // 블록 회전
@@ -61,55 +88,7 @@ partial class Block
     {
 
     }
-
-    // 블록 이동 
-    public void MoveBlock(ConsoleKey inputKey)
-    {
-
-        // 이동하기 전 블록을 비어있는 블록으로 변경
-        for (int blockY = 0; blockY < blockData.BlockHeightLength; blockY++)
-        {
-            for (int blockX = 0; blockX < blockData.BlockWidthLength; blockX++)
-            {
-                if (currentMoveBlock[blockY, blockX] == 1)
-                {
-                    tetrisScreen.FrontTetris[blockY + this.y][blockX + this.x] = (int)BlockState.NONBLOCK;
-                }
-            }
-        }
-
-        // 방향키에 해당되는 방향만큼 이동중인 블록의 위치값을 변경
-        if (inputKey == ConsoleKey.DownArrow)
-        {
-            movePositionY++;
-        }
-        else if (inputKey == ConsoleKey.LeftArrow)
-        {
-            movePositionX--;
-        }
-        else if (inputKey == ConsoleKey.RightArrow)
-        {
-            movePositionX++;
-        }
-        else if (inputKey == ConsoleKey.UpArrow)
-        {
-            currentBlockRotate++;
-            if ((int)currentBlockRotate == 4) currentBlockRotate = 0;
-        }
-
-        // 보드에 이동한 블록을 그려준다.
-        for (int blockY = 0; blockY < blockData.BlockHeightLength; blockY++)
-        {
-            for (int blockX = 0; blockX < blockData.BlockWidthLength; blockX++)
-            {
-                if (currentBlockShape[blockY, blockX] == 1)
-                {
-                    tetrisScreen.FrontTetris[blockY + this.y][blockX + this.x] = (int)BlockState.MOVEBLOCK;
-                }
-            }
-        }
-
-    }
+    
 
 }
 

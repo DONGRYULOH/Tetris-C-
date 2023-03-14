@@ -26,7 +26,7 @@ class TetrisScreen
             frontTetrisScreen.Add(new List<int>());
             for (int j = 0; j < x; j++)
             {
-                frontTetrisScreen[i].Add((int)BlockState.NONBLOCK);
+                frontTetrisScreen[i].Add((int)Block.BlockState.NONBLOCK);
             }
         }
 
@@ -59,13 +59,13 @@ class TetrisScreen
         // 1. 마지막 테트리스 공간을 벽으로 설정 
         for (int i = 0; i < frontTetrisScreen[frontTetrisScreen.Count - 1].Count; i++)
         {
-            frontTetrisScreen[frontTetrisScreen.Count - 1][i] = (int)BlockState.WALLBLOCK;
+            frontTetrisScreen[frontTetrisScreen.Count - 1][i] = (int)Block.BlockState.WALLBLOCK;
         }
         // 2. 가장 왼쪽과 오른쪽의 공간을 벽으로 설정
         for (int i = 0; i < frontTetrisScreen.Count; i++)
         {
-            frontTetrisScreen[i][0] = (int)BlockState.WALLBLOCK;
-            frontTetrisScreen[i][frontTetrisScreen[frontTetrisScreen.Count - 1].Count - 1] = (int)BlockState.WALLBLOCK;
+            frontTetrisScreen[i][0] = (int)Block.BlockState.WALLBLOCK;
+            frontTetrisScreen[i][frontTetrisScreen[frontTetrisScreen.Count - 1].Count - 1] = (int)Block.BlockState.WALLBLOCK;
         }
     }
     
@@ -79,16 +79,16 @@ class TetrisScreen
             {
                 switch (frontTetrisScreen[y][x])
                 {
-                    case (int)BlockState.NONBLOCK:
+                    case (int)Block.BlockState.NONBLOCK:
                         Console.Write("□");
                         break;
-                    case (int)BlockState.WALLBLOCK:
+                    case (int)Block.BlockState.WALLBLOCK:
                         Console.Write("■");
                         break;
-                    case (int)BlockState.MOVEBLOCK:
+                    case (int)Block.BlockState.MOVEBLOCK:
                         Console.Write("▣");
                         break;
-                    case (int)BlockState.STACKBLOCK:
+                    case (int)Block.BlockState.STACKBLOCK:
                         Console.Write("▩");
                         break;
                     default:
