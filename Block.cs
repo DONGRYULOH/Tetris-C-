@@ -45,6 +45,7 @@ partial class Block
     {
         this.blockShape = blockShape;                
         randomBlockPick(); // 7개의 블록중에서 이동할 블록을 랜덤으로 뽑기 
+        BlockInit();
     }
 
     public int MovePositionX
@@ -66,14 +67,14 @@ partial class Block
     }
 
     // 랜덤 블록 뽑기
-    public void randomBlockPick() {
-        BlockInit(); // 떨어지는 블록의 시작 좌표값 초기화 
-
+    public void randomBlockPick() {        
         Random randomBlock = new Random();
 
         int randomBlockType = randomBlock.Next((int)BlockType.BT_I, (int)BlockType.BT_T); // 0부터 6 사이의 랜덤 블록 종류 뽑기
-        
-        currentMoveBlock = this.blockShape.BlockTypeDatas[randomBlockType];
+        int temp = (int)BlockType.BT_O;
+
+
+        currentMoveBlock = this.blockShape.BlockTypeDatas[temp];
     }
 
     // 블록 초기화

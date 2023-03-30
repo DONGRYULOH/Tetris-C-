@@ -20,49 +20,80 @@ namespace Tetris
             this.tetrisScreen = tetrisScreen;
             this.block = block;
         }
-
-
+        
         public void startTetris() {
             while (true)
             {
-                Thread.Sleep(1000);
-                Console.Clear();
+                Thread.Sleep(500);
+                Console.Clear();                
                 tetrisScreen.TetrisRender();
                 bool keyInputChk = keyInputConfirmStatus(); // 플레이어가 방향키를 눌렀는가?
                 if (keyInputChk) 
                 {
                     ConsoleKey inputKey = Console.ReadKey().Key;
                     keyInput(inputKey); // 방향키에 해당되는 곳으로 블럭 이동
-                }
+                } 
                 else 
                 {   // 방향키를 누르지 않았을 때 아래로 한칸 이동
                     bool wallCheck = moveWallBlockCheck(block, ConsoleKey.DownArrow);
-                    bool stackBlockCheck = moveStackBlockCheck(block, ConsoleKey.DownArrow);
-                    bool collisionChk = false; // 충돌여부
+                    bool stackBlockCheck = moveStackBlockCheck(block, ConsoleKey.DownArrow);                    
 
-                    // 1.아래쪽 벽과 충돌하는가? 또는 2.쌓여있는 블록과 충돌하는가?
-                    if (wallCheck == true || stackBlockCheck == true)
+                    // 충돌 여부 검사(아래쪽 벽과 충돌하는가? 또는 2.쌓여있는 블록과 충돌하는가?)
+                    if (wallCheck == true || stackBlockCheck == true) 
                     {
-                        if (blockFillLineCheck())
-                        {
-                            blockFillLineRemove();
+                        if (deadLineCheck()) {
+                            Console.Clear();
+                            tetrisScreen.TetrisRender();
+                            Console.WriteLine("게임 오버");
+                            break;
+                        } else {
+                            if (blockFillLineCheck())
+                            {
+                                blockFillLineRemove();
+                            }
+                            else 
+                            {
+                                changeBlockState();
+                            }                            
+                            block.randomBlockPick();
+                            block.BlockInit();
                         }
-                        collisionChk = true;                        
-                    }
-
-                    if (collisionChk == true)
-                    { // 랜덤 블록 생성 
-                        changeBlockState();
-                        block.BlockInit();
-                        block.randomBlockPick();
-                    }
-                    else
-                    { // 블록이동 
+                    } 
+                    else 
+                    {
                         MoveBlock(ConsoleKey.DownArrow);
-                    }
-                    
+                    }                    
                 }
             }
+        }
+
+        // 랜덤으로 생성된 블록을 테트리스 보드에 그려줌
+        public void blockDraw() {
+            for (int y = 0; y < 4; y++)
+            {
+                for (int x = 0; x < 4; x++)
+                {
+                    if (block.currentMoveBlock[(int)block.CurrentBlockRotate][y, x] == (int)Block.BlockState.MOVEBLOCK)
+                    {
+                        tetrisScreen.FrontTetris[block.MovePositionY + y][block.MovePositionX + x] = (int)Block.BlockState.MOVEBLOCK;
+                    }
+                }
+            }
+        }
+
+        public bool deadLineCheck() {
+            blockDraw(); // 랜덤으로 생성된 블록을 테트리스 보드에 그려주기
+
+            for (int y = 0; y > -1; y--) {
+                for (int x = 1; x < tetrisScreen.tetrisBoardGetX - 1; x++)
+                {
+                    if (tetrisScreen.FrontTetris[y][x] == (int)Block.BlockState.MOVEBLOCK) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public bool keyInputConfirmStatus() {
@@ -113,7 +144,7 @@ namespace Tetris
             }
         }
 
-        // 쌓여있는 블록으로 상태를 변경
+        // 이동중인 블록을 쌓여있는 블록으로 상태를 변경
         public void changeBlockState()
         {
             for (int y = 0; y < 4; y++)
@@ -170,15 +201,15 @@ namespace Tetris
                 {
                     if (block.currentMoveBlock[(int)block.CurrentBlockRotate][y, x] == (int)Block.BlockState.MOVEBLOCK)
                     {
-                        if (inputKey == ConsoleKey.DownArrow && tetrisScreen.FrontTetris[y + block.MovePositionY + 1][x + block.MovePositionX] == (int)Block.BlockState.STACKBLOCK)
+                        if (inputKey == ConsoleKey.DownArrow && tetrisScreen.FrontTetris[block.MovePositionY + y + 1][block.MovePositionX + x] == (int)Block.BlockState.STACKBLOCK)
                         {
                             return true;
                         }
-                        else if (inputKey == ConsoleKey.LeftArrow && tetrisScreen.FrontTetris[y + block.MovePositionY][x + block.MovePositionX - 1] == (int)Block.BlockState.STACKBLOCK)
+                        else if (inputKey == ConsoleKey.LeftArrow && tetrisScreen.FrontTetris[block.MovePositionY + y][block.MovePositionX - 1 + x] == (int)Block.BlockState.STACKBLOCK)
                         {
                             return true;
                         }
-                        else if (inputKey == ConsoleKey.RightArrow && tetrisScreen.FrontTetris[y + block.MovePositionY + 1][x + block.MovePositionX + 1] == (int)Block.BlockState.STACKBLOCK)
+                        else if (inputKey == ConsoleKey.RightArrow && tetrisScreen.FrontTetris[block.MovePositionY +  y + 1][block.MovePositionX + x + 1] == (int)Block.BlockState.STACKBLOCK)
                         {
                             return true;
                         }
@@ -262,31 +293,28 @@ namespace Tetris
                 // 해당라인에 블록이 하나라도 없는 경우는 다음 라인의 블록 여부를 검사할 필요가 없음
                 if (blockNumCnt == 0) break;
 
-                // 해당라인이 블록으로 가득 차있으면(양쪽 벽 제외)                 
+                // 해당라인이 블록으로 가득 차있으면(양쪽 벽 제외) 비어있는 블록으로 변경 
                 if (blockNumCnt == tetrisScreen.tetrisBoardGetX - 2)
-                {
-                    // 비어있는 블록으로 변경 
+                {                    
                     for (int x = 1; x < tetrisScreen.tetrisBoardGetX - 1; x++)
                     {
                         tetrisScreen.FrontTetris[y][x] = (int)Block.BlockState.NONBLOCK;
                     }
-                    blockMoveCnt++; // 블록이동 횟수 1증가
+                    blockMoveCnt++; // 블록이동 횟수 1증가                    
                 }
                 else if (blockNumCnt >= 1 && blockNumCnt != tetrisScreen.tetrisBoardGetX - 2 && blockMoveCnt > 0)
                 {
-                    for (int currentBlockY = 0; currentBlockY < 4; currentBlockY++)
+                    // 해당 라인에 있는 모든 블록(쌓여있는 블록, 이동중인 블록)을 내리기 
+                    for (int x = 1; x < tetrisScreen.tetrisBoardGetX - 1; x++)
                     {
-                        for (int currentBlockX = 0; currentBlockX < 4; currentBlockX++)
+                        if(tetrisScreen.FrontTetris[y][x] == (int)Block.BlockState.STACKBLOCK || tetrisScreen.FrontTetris[y][x] == (int)Block.BlockState.MOVEBLOCK)
                         {
-                            if (block.currentMoveBlock[(int)block.CurrentBlockRotate][currentBlockY, currentBlockX] == (int)Block.BlockState.MOVEBLOCK)
-                            {
-                                tetrisScreen.FrontTetris[currentBlockY + block.MovePositionY + blockMoveCnt][currentBlockX + block.MovePositionX] = (int)Block.BlockState.MOVEBLOCK;
-                                tetrisScreen.FrontTetris[currentBlockY + block.MovePositionY][currentBlockX + block.MovePositionX] = (int)Block.BlockState.NONBLOCK;
-                            }
-                        }
-                    }
+                            tetrisScreen.FrontTetris[y + blockMoveCnt][x] = (int)Block.BlockState.STACKBLOCK;
+                            tetrisScreen.FrontTetris[y][x] = (int)Block.BlockState.NONBLOCK;
+                        }                        
+                    }                                       
                 }
-
+                blockNumCnt = 0;
             }
         }
 

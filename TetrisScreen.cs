@@ -31,6 +31,7 @@ class TetrisScreen
         }
 
         createTetrisWall(frontTetrisScreen);
+        // createDeadLine(frontTetrisScreen);
     }
 
     /* getter, setter */
@@ -68,12 +69,20 @@ class TetrisScreen
             frontTetrisScreen[i][frontTetrisScreen[frontTetrisScreen.Count - 1].Count - 1] = (int)Block.BlockState.WALLBLOCK;
         }
     }
+
+    // 테트리스 보드의 맨 위쪽(데드라인 블록) 생성 
+    /*public void createDeadLine(List<List<int>> frontTetrisScreen) {
+        for (int x = 1; x < tetrisBoardGetX - 1; x++)
+        {
+            frontTetrisScreen[0][x] = (int)Block.BlockState.DEADBLOCK;            
+        }
+    }*/
     
 
     // 테트리스 보드를 콘솔에 출력
     public virtual void TetrisRender()
     {
-        for (int y = 0; y < frontTetrisScreen.Count; y++)
+        for (int y = 1; y < frontTetrisScreen.Count; y++)
         {
             for (int x = 0; x < frontTetrisScreen[y].Count; x++)
             {
@@ -90,7 +99,7 @@ class TetrisScreen
                         break;
                     case (int)Block.BlockState.STACKBLOCK:
                         Console.Write("▩");
-                        break;
+                        break;                    
                     default:
                         break;
                 }
